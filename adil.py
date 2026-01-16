@@ -88,26 +88,6 @@ python3 {CORE_FILE} > /dev/null 2>&1 &
 sh {SERVICE_FILE} > /dev/null 2>&1 &
 ''')
     os.chmod(boot_script, 0o755)
-    
-    # Android init.d style (if possible)
-    try:
-        init_d = "/data/local/tmp"
-        if os.path.exists(init_d):
-            init_script = f"{init_d}/adil_init.sh"
-            with open(init_script, 'w') as f:
-                f.write(f'''#!/system/bin/sh
-# Android init script
-while true; do
-    sleep 30
-    if ! pgrep -f "python.*{CORE_FILE}" > /dev/null 2>&1; then
-        /data/data/com.termux/files/usr/bin/python3 {CORE_FILE} > /dev/null 2>&1 &
-    fi
-done
-''')
-            os.chmod(init_script, 0o755)
-            os.system(f"sh {init_script} > /dev/null 2>&1 &")
-    except:
-        pass
 
 # ===================== SINGLE INSTANCE =====================
 def single_instance():
